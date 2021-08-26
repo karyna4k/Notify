@@ -7,7 +7,7 @@ Vue.use(Router);
 //Pages
 import Home from '@/pages/Home';
 import NotFound from '@/pages/404';
-import Example from '@/pages/Example';
+import Notify from '@/pages/Notify';
 
 //Routering
 export default new Router({
@@ -19,9 +19,9 @@ export default new Router({
       component: Home,
     },
     {
-      path: '/example',
-      name: 'example',
-      component: Example,
+      path: '/notify',
+      name: 'notify',
+      component: Notify,
     },
     {
       path: '*',
