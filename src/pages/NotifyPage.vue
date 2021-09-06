@@ -94,6 +94,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+          this.error = "An error has occurred. Try again!";
         })
         .finally(() => {
           this.loading = false;
