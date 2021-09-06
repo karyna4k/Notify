@@ -7,7 +7,16 @@
             <h1>Notify App</h1>
           </div>
           <div class="notify__content">
-            <notify :messages="messages" />
+            <!-- preloader -->
+            <preloader v-if="loading" :width="90" :height="90" />
+
+            <!-- erorr -->
+            <div class="error" v-if="error">
+              <p>{{ error }}</p>
+            </div>
+
+            <!-- notify -->
+            <notify v-if="!loading && !error" :messages="messages" />
           </div>
         </div>
       </div>
@@ -16,21 +25,47 @@
 </template>
 
 <script>
+import axios from "axios";
 import notify from "@/components/Notify.vue";
 
+// UI
+import preloader from '@/components/UI/Preloader.vue'
+
 export default {
-  components: { notify },
+  components: { notify, preloader },
   data() {
     return {
-      messages: [
-        { title: "message 1" },
-        { title: "message 2" },
-        { title: "message 3" },
-        { title: "message 4" },
-        { title: "message 5" },
-        { title: "message 6" },
-      ],
+      loading: false,
+      error: null,
+      messages: [],
     };
+  },
+  mounted() {
+    this.getNotify();
+  },
+  methods: {
+    getNotifyLazy() {
+      this.loading = true;
+      setTimeout(() => {
+        this.getNotify();
+      }, 1800);
+    },
+    getNotify() {
+      this.loading = true;
+      axios
+        .get("https://tocode.ru/static/_secret/courses/1/notifyApi.php")
+        .then((response) => {
+          let res = response.data.notify;
+          this.messages = res;
+          // console.log(res);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
   },
 };
 </script>
@@ -48,7 +83,7 @@ export default {
   padding: 32px;
   border-radius: 16px;
   background-color: #fff;
-  box-shadow: 0 12px 22px 0 rgba(0,0,0, 0.1);
+  box-shadow: 0 12px 22px 0 rgba(0, 0, 0, 0.1);
 
   &__title {
     h1 {
